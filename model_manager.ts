@@ -6,6 +6,7 @@ import { SentimentModel } from "./models/sentiment.ts";
 import { TranslationModel } from "./models/translation/mod.ts";
 import type { TranslationModelInit } from "./models/translation/mod.ts";
 import { encode } from "./utils/encode.ts";
+import { decode } from "./utils/decode.ts";
 
 const symbolDefinitions = {
   create_qa_model: { parameters: [], result: "isize", nonblocking: true },
@@ -89,7 +90,7 @@ export class ModelManager {
       const len = await bindings.error_len();
       const buf = new Uint8Array(len);
       await bindings.fill_error(buf);
-      throw new BertMLError(new TextDecoder().decode(buf));
+      throw new BertMLError(decode(buf));
     }
     return code;
   };

@@ -1,6 +1,7 @@
 import type { ModelManager } from "../model_manager.ts";
 import { Model } from "../model.ts";
 import { encode } from "../utils/encode.ts";
+import { decode } from "../utils/decode.ts";
 
 interface NEREntity {
   word: string;
@@ -21,7 +22,7 @@ export class NERModel extends Model {
     );
     const buf = new Uint8Array(len);
     await bindings.fill_result(buf, len);
-    const json = new TextDecoder().decode(buf);
+    const json = decode(buf);
     return JSON.parse(json);
   }
 }

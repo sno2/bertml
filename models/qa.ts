@@ -1,6 +1,7 @@
 import type { ModelManager } from "../model_manager.ts";
 import { Model } from "../model.ts";
 import { encode } from "../utils/encode.ts";
+import { decode } from "../utils/decode.ts";
 
 export interface QAQuestion {
   context: string;
@@ -42,7 +43,7 @@ export class QAModel extends Model {
     ).then(assertCode);
     const buf = new Uint8Array(len);
     const res = await bindings.fill_result(buf, len);
-    const json = new TextDecoder().decode(buf);
+    const json = decode(buf);
     return JSON.parse(json);
   }
 }
