@@ -1,4 +1,4 @@
-import { ModelManager, Language } from "./mod.ts";
+import { Language, ModelManager } from "./mod.ts";
 
 const manager = new ModelManager();
 
@@ -13,7 +13,7 @@ console.log(entity);
 const sentimentModel = await manager.createSentimentModel();
 const sentiments = await sentimentModel.predict([
   "I just love her blue hat.",
-  "They should burn in the depths of hell."
+  "They should burn in the depths of hell.",
 ]);
 console.log(sentiments);
 
