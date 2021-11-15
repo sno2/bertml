@@ -13,6 +13,8 @@ methods on those classes.
 
 ### Supported Pipelines
 
+> Note: we do not currently support any model-level configuration except for the different languages for the `TranslationModel`.
+
 - `TranslationModel`
 - `NERModel`
 - `QAModel`
