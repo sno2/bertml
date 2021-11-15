@@ -43,4 +43,4 @@ making these models public and interfaceable with Rust (+ Deno).
 
 ### License
 
-MIT
+[MIT](./LICENSE)
