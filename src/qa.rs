@@ -88,7 +88,7 @@ extern "C" fn qa_query(
             let res = model.predict(&inputs, answers_len as i64, batch_size);
 
             Ok(res)
-        })??;
+        })?;
 
         let js_answers: Vec<Vec<JsQaAnswer>> = answers
             .into_iter()

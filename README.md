@@ -16,10 +16,15 @@ methods on those classes.
 > Note: we do not currently support any model-level configuration except for the
 > different languages for the `TranslationModel`.
 
+- `ConversationModel`
 - `TranslationModel`
 - `NERModel`
 - `QAModel`
 - `SentimentModel`
+
+To test out these pipelines, you can try and run the `dev.ts` file. However,
+this will automatically install the necessary models so I advise you comment out
+the models you don't want to download.
 
 ### [`rust-bert` citations](https://github.com/guillaume-be/rust-bert#citation)
 

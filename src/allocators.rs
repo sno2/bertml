@@ -1,25 +1,27 @@
 use crate::create_allocator;
-use rust_bert::pipelines::{ner, question_answering, sentiment, translation};
+use rust_bert::pipelines::{conversation, ner, question_answering, sentiment, translation};
 
 pub enum Model {
     TranslationModel(translation::TranslationModel),
     QuestionAnsweringModel(question_answering::QuestionAnsweringModel),
     NERModel(ner::NERModel),
     SentimentModel(sentiment::SentimentModel),
+    ConversationModel(conversation::ConversationModel),
 }
 
-impl Model {
-    pub fn name(&self) -> &str {
-        match self {
-            Self::TranslationModel(_) => "TranslationModel",
-            Self::QuestionAnsweringModel(_) => "QuestionAnsweringModel",
-            Self::NERModel(_) => "NERModel",
-            Self::SentimentModel(_) => "SentimentModel",
-        }
-    }
+pub enum ModelResource {
+    ConversationManager(conversation::ConversationManager),
+}
+
+/// For models that are required to use a model resource but cannot be a model resource due to
+/// locks.
+pub enum ModelResourceAccessor {
+    ConversationId(uuid::Uuid),
 }
 
 create_allocator! { pub alloc models for super::Model }
+create_allocator! { pub alloc model_resources for super::ModelResource }
+create_allocator! { pub alloc model_resource_accessors for super::ModelResourceAccessor }
 
 mod macros {
     #[macro_export]
@@ -51,11 +53,12 @@ mod macros {
 
             pub fn with_access<T, F>(rid: usize, f: F) -> Result<T, anyhow::Error>
             where
-                F: FnOnce(&$itm) -> T,
+                F: FnOnce(&mut $itm) -> Result<T, anyhow::Error>,
+
             {
-                let allocator = ALLOCATOR.lock().unwrap();
-                match allocator.get(&rid) {
-                    Some(guard) => Ok(f(guard)),
+                let mut allocator = ALLOCATOR.lock().unwrap();
+                match allocator.get_mut(&rid) {
+                    Some(guard) => f(guard),
                     None => Err(anyhow::anyhow!("Failed to get resource with id.")),
                 }
             }

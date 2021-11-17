@@ -4,9 +4,12 @@ import { Model } from "../../model.ts";
 import { encode } from "../../utils/encode.ts";
 import { decode } from "../../utils/decode.ts";
 
-export interface TranslationModelInit {
-  sourceLanguages: Language[];
-  targetLanguages: Language[];
+export interface TranslationModelInit<
+  SourceLanguages extends Language[] = Language[],
+  TargetLanguages extends Language[] = Language[],
+> {
+  sourceLanguages: SourceLanguages;
+  targetLanguages: TargetLanguages;
 }
 
 export interface TranslateInit {

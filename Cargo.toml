@@ -15,3 +15,4 @@ rust-bert = { git = "https://github.com/guillaume-be/rust-bert.git" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1.0"
 anyhow = "1.0"
+uuid = { version = "0.8.2", features = ["v4"] } # matches rust-bert's

@@ -1,14 +1,34 @@
 import { Language, ModelManager } from "./mod.ts";
 
+const SECTION = (name: string) => console.log(`\n${name}\n`);
+
 const manager = new ModelManager();
 
-// ==== NER MODEL ==== //
+const convoModel = await manager.createConversationModel();
+
+const convoManager = await convoModel.createConversationManager();
+
+const convo = await convoManager.createConversation();
+
+SECTION("CONVERSATION MODEL");
+
+const message1 = "Hello, what is your favorite color?";
+console.log(`> ${message1}`);
+console.log(`< ${await convo.sendMessage(message1)}`);
+
+console.log();
+
+const message2 = "Cool, why is that?"; // watch it actually continues the conversation
+console.log(`> ${message2}`);
+console.log(`< ${await convo.sendMessage(message2)}`);
+
+SECTION("NER MODEL");
 
 const nerModel = await manager.createNERModel();
 const [entity] = await nerModel.predict(["My name is Amy. I live in Paris."]);
 console.log(entity);
 
-// ==== SENTIMENT MODEL ==== //
+SECTION("SENTIMENT MODEL");
 
 const sentimentModel = await manager.createSentimentModel();
 const sentiments = await sentimentModel.predict([
@@ -17,7 +37,7 @@ const sentiments = await sentimentModel.predict([
 ]);
 console.log(sentiments);
 
-// ==== QA MODEL ===== //
+SECTION("QA MODEL");
 
 const qaModel = await manager.createQAModel();
 
@@ -32,7 +52,7 @@ const [answer] = await qaModel.query({
 
 console.log(answer);
 
-// ==== TRANSLATION MODEL ==== //
+SECTION("TRANSLATION MODEL");
 
 const translationModel = await manager.createTranslationModel({
   sourceLanguages: [Language.English],

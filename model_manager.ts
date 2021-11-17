@@ -4,6 +4,7 @@ import { QAModel } from "./models/qa.ts";
 import { NERModel } from "./models/ner.ts";
 import { SentimentModel } from "./models/sentiment.ts";
 import { TranslationModel } from "./models/translation/mod.ts";
+import { ConversationModel } from "./models/conversation.ts";
 import type { TranslationModelInit } from "./models/translation/mod.ts";
 import { encode } from "./utils/encode.ts";
 import { decode } from "./utils/decode.ts";
@@ -45,6 +46,26 @@ const symbolDefinitions = {
   fill_result: {
     parameters: ["buffer", "usize"],
     result: "void",
+    nonblocking: true,
+  },
+  create_conversation_model: {
+    parameters: [],
+    result: "isize",
+    nonblocking: true,
+  },
+  create_conversation_manager: {
+    parameters: [],
+    result: "isize",
+    nonblocking: true,
+  },
+  create_conversation: {
+    parameters: ["usize"],
+    result: "isize",
+    nonblocking: true,
+  },
+  conversation_send: {
+    parameters: ["usize", "usize", "usize", "buffer", "usize"],
+    result: "isize",
     nonblocking: true,
   },
   fill_error: { parameters: ["buffer"], result: "void", nonblocking: true },
@@ -105,6 +126,21 @@ export class ModelManager {
     return this.#symbols;
   }
 
+  #helpers = {
+    getResult: async (len: number): Promise<Uint8Array> => {
+      const buf = new Uint8Array(len);
+      await this.bindings.fill_result(buf, len);
+      return buf;
+    },
+    getResultString: async (len: number): Promise<string> => {
+      return decode(await this.helpers.getResult(len));
+    },
+  } as const;
+
+  get helpers() {
+    return this.#helpers;
+  }
+
   constructor() {
     const lib = Deno.dlopen(BINARY_LOCATION, symbolDefinitions as any);
     this.#symbols = lib.symbols as any;
@@ -143,6 +179,15 @@ export class ModelManager {
       bytes.length,
     ).then(this.assertCode);
     const model = new TranslationModel(this, rid, init);
+    this.#models.push(model);
+    return model;
+  }
+
+  async createConversationModel(): Promise<ConversationModel> {
+    const rid = await this.bindings.create_conversation_model().then(
+      this.assertCode,
+    );
+    const model = new ConversationModel(this, rid);
     this.#models.push(model);
     return model;
   }

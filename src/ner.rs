@@ -48,7 +48,7 @@ extern "C" fn ner_predict(rid: usize, input: *const u8, input_len: usize) -> isi
             };
 
             Ok(model.predict(&input))
-        })??;
+        })?;
 
         let entities: Vec<Vec<NEREntity>> = entities
             .into_iter()

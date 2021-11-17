@@ -198,7 +198,7 @@ extern "C" fn translation_translate(rid: usize, init: *const u8, init_len: usize
                 .translate(&inputs, source_language, target_language)
                 .context("Failed to translate.")
         })
-        .context("Failed to access translation model.")??;
+        .context("Failed to access translation model.")?;
 
         Ok(
             set_result(serde_json::to_vec(&res).context("Failed to serialize translation data.")?)

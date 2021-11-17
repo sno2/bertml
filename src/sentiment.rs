@@ -48,7 +48,7 @@ extern "C" fn sentiment_predict(rid: usize, input: *const u8, input_len: usize) 
             };
 
             Ok(model.predict(input.as_slice()))
-        })??;
+        })?;
 
         let sentiments: Vec<JSSentiment> = sentiments.into_iter().map(|s| s.into()).collect();
         let json =

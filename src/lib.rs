@@ -1,10 +1,12 @@
 mod allocators;
+mod conversation;
 mod ner;
 mod qa;
 mod sentiment;
 mod translation;
 
 pub use allocators::*;
+pub use conversation::*;
 pub use ner::*;
 use once_cell::sync::Lazy;
 pub use qa::*;
