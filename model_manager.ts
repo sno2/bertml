@@ -6,6 +6,7 @@ import { SentimentModel } from "./models/sentiment.ts";
 import { TranslationModel } from "./models/translation/mod.ts";
 import { ConversationModel } from "./models/conversation.ts";
 import type { TranslationModelInit } from "./models/translation/mod.ts";
+import { POSModel } from "./models/pos.ts";
 import { encode } from "./utils/encode.ts";
 import { decode } from "./utils/decode.ts";
 
@@ -42,12 +43,6 @@ const symbolDefinitions = {
     result: "isize",
     nonblocking: true,
   },
-  error_len: { parameters: [], result: "usize", nonblocking: true },
-  fill_result: {
-    parameters: ["buffer", "usize"],
-    result: "void",
-    nonblocking: true,
-  },
   create_conversation_model: {
     parameters: [],
     result: "isize",
@@ -66,6 +61,22 @@ const symbolDefinitions = {
   conversation_send: {
     parameters: ["usize", "usize", "usize", "buffer", "usize"],
     result: "isize",
+    nonblocking: true,
+  },
+  create_pos_model: {
+    parameters: [],
+    result: "isize",
+    nonblocking: true,
+  },
+  pos_predict: {
+    parameters: ["usize", "buffer", "usize"],
+    result: "isize",
+    nonblocking: true,
+  },
+  error_len: { parameters: [], result: "usize", nonblocking: true },
+  fill_result: {
+    parameters: ["buffer", "usize"],
+    result: "void",
     nonblocking: true,
   },
   fill_error: { parameters: ["buffer"], result: "void", nonblocking: true },
@@ -188,6 +199,15 @@ export class ModelManager {
       this.assertCode,
     );
     const model = new ConversationModel(this, rid);
+    this.#models.push(model);
+    return model;
+  }
+
+  async createPOSModel(): Promise<POSModel> {
+    const rid = await this.bindings.create_pos_model().then(
+      this.assertCode,
+    );
+    const model = new POSModel(this, rid);
     this.#models.push(model);
     return model;
   }

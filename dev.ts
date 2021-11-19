@@ -4,6 +4,12 @@ const SECTION = (name: string) => console.log(`\n${name}\n`);
 
 const manager = new ModelManager();
 
+SECTION("POS TAGGING MODEL");
+
+const posModel = await manager.createPOSModel();
+
+console.log(await posModel.predict(["What are the parts in this?"]));
+
 const convoModel = await manager.createConversationModel();
 
 const convoManager = await convoModel.createConversationManager();

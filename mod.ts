@@ -15,3 +15,6 @@ export type {
   TranslateInit,
   TranslationModelInit,
 } from "./models/translation/mod.ts";
+
+export { POSModel } from "./models/pos.ts";
+export type { POSEntity } from "./models/pos.ts";

@@ -21,6 +21,7 @@ methods on those classes.
 - `NERModel`
 - `QAModel`
 - `SentimentModel`
+- `POSModel`
 
 To test out these pipelines, you can try and run the `dev.ts` file. However,
 this will automatically install the necessary models so I advise you comment out

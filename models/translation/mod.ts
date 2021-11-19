@@ -26,15 +26,12 @@ export class TranslationModel extends Model {
     this.#init = init;
   }
 
-  async translate(init: TranslateInit) {
-    const { sourceLanguage, targetLanguage } = init;
+  async translate(init: TranslateInit): Promise<string[]> {
     const { bindings, assertCode } = this.manager;
     const bytes = encode(JSON.stringify(init));
-    const len = await bindings.translation_translate(
-      this.rid,
-      bytes,
-      bytes.length,
-    ).then(assertCode);
+    const len = await bindings
+      .translation_translate(this.rid, bytes, bytes.length)
+      .then(assertCode);
     const buf = new Uint8Array(len);
     await bindings.fill_result(buf, len);
     const json = decode(buf);

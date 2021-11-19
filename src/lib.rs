@@ -1,14 +1,18 @@
 mod allocators;
 mod conversation;
 mod ner;
+mod pos_tagging;
 mod qa;
 mod sentiment;
 mod translation;
+mod zero_shot_classification;
 
+pub use zero_shot_classification::*;
 pub use allocators::*;
 pub use conversation::*;
 pub use ner::*;
 use once_cell::sync::Lazy;
+pub use pos_tagging::*;
 pub use qa::*;
 pub use sentiment::*;
 use std::sync::Mutex;
@@ -27,7 +31,7 @@ pub fn set_result(v: Vec<u8>) -> usize {
 /// Inspired by deno_sqlite3's `exec` helper by @littledivvy
 pub fn exec<F>(f: F) -> isize
 where
-    F: FnOnce() -> Result<isize, anyhow::Error>,
+   F: FnOnce() -> Result<isize, anyhow::Error>,
 {
     match f() {
         Ok(a) => a,
