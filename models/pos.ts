@@ -15,14 +15,11 @@ export class POSModel extends Model {
   }
 
   async predict(inputs: string[]): Promise<POSEntity[]> {
-    const { bindings, assertCode } = this.manager;
+    const { bindings, assertCode, helpers } = this.manager;
     const bytes = encode(JSON.stringify(inputs));
     const len = await bindings
       .pos_predict(this.rid, bytes, bytes.length)
       .then(assertCode);
-    const buf = new Uint8Array(len);
-    await bindings.fill_result(buf, len);
-    const json = decode(buf);
-    return JSON.parse(json);
+    return JSON.parse(await helpers.getResultString(len));
   }
 }

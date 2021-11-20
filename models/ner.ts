@@ -15,14 +15,11 @@ export class NERModel extends Model {
   }
 
   async predict(text: string[]): Promise<NEREntity[][]> {
-    const { bindings, assertCode } = this.manager;
+    const { bindings, assertCode, helpers } = this.manager;
     const bytes = encode(JSON.stringify(text));
-    const len = await bindings.ner_predict(this.rid, bytes, bytes.length).then(
-      assertCode,
-    );
-    const buf = new Uint8Array(len);
-    await bindings.fill_result(buf, len);
-    const json = decode(buf);
-    return JSON.parse(json);
+    const len = await bindings
+      .ner_predict(this.rid, bytes, bytes.length)
+      .then(assertCode);
+    return JSON.parse(await helpers.getResultString(len));
   }
 }

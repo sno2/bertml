@@ -19,13 +19,11 @@ export class SentimentModel extends Model {
   }
 
   async predict(input: string[]): Promise<Sentiment[]> {
-    const { bindings, assertCode } = this.manager;
+    const { bindings, assertCode, helpers } = this.manager;
     const bytes = encode(JSON.stringify(input));
-    const len = await bindings.sentiment_predict(this.rid, bytes, bytes.length)
+    const len = await bindings
+      .sentiment_predict(this.rid, bytes, bytes.length)
       .then(assertCode);
-    const buf = new Uint8Array(len);
-    await bindings.fill_result(buf, len);
-    const json = decode(buf);
-    return JSON.parse(json);
+    return JSON.parse(await helpers.getResultString(len));
   }
 }

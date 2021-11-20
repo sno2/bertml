@@ -49,13 +49,15 @@ export class Conversation {
     } = this;
     const { bindings, helpers, assertCode } = manager;
     const bytes = encode(message);
-    const len = await bindings.conversation_send(
-      modelRid,
-      convoManagerRid,
-      convoRid,
-      bytes,
-      bytes.length,
-    ).then(assertCode);
+    const len = await bindings
+      .conversation_send(
+        modelRid,
+        convoManagerRid,
+        convoRid,
+        bytes,
+        bytes.length,
+      )
+      .then(assertCode);
     const response = await helpers.getResultString(len);
     if (this.#init.includeHistory === true) {
       this.#history.push([message, response]);
@@ -86,7 +88,7 @@ export class ConversationManager {
     const { assertCode, bindings } = this.model.manager;
 
     const rid = await bindings.create_conversation(this.rid).then(assertCode);
-    return new Conversation(this, rid);
+    return new Conversation(this, rid, init);
   }
 }
 
