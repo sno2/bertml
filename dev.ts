@@ -4,6 +4,22 @@ const SECTION = (name: string) => console.log(`\n${name}\n`);
 
 const manager = new ModelManager();
 
+SECTION("ZERO SHOT CLASSIFICATION MODEL");
+
+const zeroShotModel = await manager.createZeroShotClassificationModel();
+
+const zeroShotInput = {
+  inputs: [
+    "Who are you voting for in 2024?",
+    "10,000 people have died from covid-19.",
+  ],
+  labels: ["politics", "public health"],
+};
+
+
+console.log(await zeroShotModel.predict(zeroShotInput));
+console.log(await zeroShotModel.predictMultilabel(zeroShotInput));
+
 SECTION("POS TAGGING MODEL");
 
 const posModel = await manager.createPOSModel();

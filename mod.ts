@@ -1,3 +1,5 @@
+export { BertMLError } from "./error.ts";
+
 export { ModelManager } from "./model_manager.ts";
 export { Model } from "./model.ts";
 

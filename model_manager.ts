@@ -5,10 +5,12 @@ import { NERModel } from "./models/ner.ts";
 import { SentimentModel } from "./models/sentiment.ts";
 import { TranslationModel } from "./models/translation/mod.ts";
 import { ConversationModel } from "./models/conversation.ts";
+import { ZeroShotClassificationModel } from "./models/zero_shot_classification.ts";
 import type { TranslationModelInit } from "./models/translation/mod.ts";
 import { POSModel } from "./models/pos.ts";
 import { encode } from "./utils/encode.ts";
 import { decode } from "./utils/decode.ts";
+import { BertMLError } from "./error.ts";
 
 const symbolDefinitions = {
   create_qa_model: { parameters: [], result: "isize", nonblocking: true },
@@ -73,6 +75,21 @@ const symbolDefinitions = {
     result: "isize",
     nonblocking: true,
   },
+  create_zero_shot_model: {
+    parameters: [],
+    result: "isize",
+    nonblocking: true,
+  },
+  zero_shot_predict: {
+    parameters: ["usize", "buffer", "usize"],
+    result: "isize",
+    nonblocking: true,
+  },
+  zero_shot_predict_multilabel: {
+    parameters: ["usize", "buffer", "usize"],
+    result: "isize",
+    nonblocking: true,
+  },
   error_len: { parameters: [], result: "usize", nonblocking: true },
   fill_result: {
     parameters: ["buffer", "usize"],
@@ -93,17 +110,10 @@ const BINARY_LOCATION = (() => {
   }[Deno.build.os];
 
   const name = "libffi";
-  const path = "./target/debug/";
+  const path = "./target/release/";
 
   return `${path}${prefix}${name}.${ext}`;
 })();
-
-export class BertMLError extends Error {
-  constructor(name: string) {
-    super(name);
-    this.name = name;
-  }
-}
 
 /** Provides an abstraction for creating models that run on the same native thread (but don't block the JS thread). */
 export class ModelManager {
@@ -208,6 +218,17 @@ export class ModelManager {
       this.assertCode,
     );
     const model = new POSModel(this, rid);
+    this.#models.push(model);
+    return model;
+  }
+
+  async createZeroShotClassificationModel(): Promise<
+    ZeroShotClassificationModel
+  > {
+    const rid = await this.bindings.create_zero_shot_model().then(
+      this.assertCode,
+    );
+    const model = new ZeroShotClassificationModel(this, rid);
     this.#models.push(model);
     return model;
   }
