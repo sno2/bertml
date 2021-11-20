@@ -16,7 +16,6 @@ const zeroShotInput = {
   labels: ["politics", "public health"],
 };
 
-
 console.log(await zeroShotModel.predict(zeroShotInput));
 console.log(await zeroShotModel.predictMultilabel(zeroShotInput));
 

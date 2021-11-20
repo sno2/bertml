@@ -12,21 +12,23 @@ export interface TranslationModelInit<
   targetLanguages: TargetLanguages;
 }
 
-export interface TranslateInit {
+export interface TranslateInit<
+  ModelInit extends TranslationModelInit = TranslationModelInit,
+> {
   inputs: string[];
-  sourceLanguage: Language;
-  targetLanguage: Language;
+  sourceLanguage: ModelInit["sourceLanguages"][number];
+  targetLanguage: ModelInit["targetLanguages"][number];
 }
 
-export class TranslationModel extends Model {
-  #init: TranslationModelInit;
+export class TranslationModel<T extends TranslationModelInit> extends Model {
+  #init: T;
 
-  constructor(manager: ModelManager, rid: number, init: TranslationModelInit) {
+  constructor(manager: ModelManager, rid: number, init: T) {
     super(manager, rid);
     this.#init = init;
   }
 
-  async translate(init: TranslateInit): Promise<string[]> {
+  async translate(init: TranslateInit<T>): Promise<string[]> {
     const { bindings, assertCode } = this.manager;
     const bytes = encode(JSON.stringify(init));
     const len = await bindings

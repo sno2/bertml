@@ -183,40 +183,37 @@ export class ModelManager {
   }
 
   async createSentimentModel(): Promise<SentimentModel> {
-    const rid = await this.bindings.create_sentiment_model().then(
-      this.assertCode,
-    );
+    const rid = await this.bindings
+      .create_sentiment_model()
+      .then(this.assertCode);
     const model = new SentimentModel(this, rid);
     this.#models.push(model);
     return model;
   }
 
-  async createTranslationModel(
-    init: TranslationModelInit,
-  ): Promise<TranslationModel> {
+  async createTranslationModel<T extends TranslationModelInit>(
+    init: T,
+  ): Promise<TranslationModel<T>> {
     const bytes = encode(JSON.stringify(init));
-    const rid = await this.bindings.create_translation_model(
-      bytes,
-      bytes.length,
-    ).then(this.assertCode);
+    const rid = await this.bindings
+      .create_translation_model(bytes, bytes.length)
+      .then(this.assertCode);
     const model = new TranslationModel(this, rid, init);
     this.#models.push(model);
     return model;
   }
 
   async createConversationModel(): Promise<ConversationModel> {
-    const rid = await this.bindings.create_conversation_model().then(
-      this.assertCode,
-    );
+    const rid = await this.bindings
+      .create_conversation_model()
+      .then(this.assertCode);
     const model = new ConversationModel(this, rid);
     this.#models.push(model);
     return model;
   }
 
   async createPOSModel(): Promise<POSModel> {
-    const rid = await this.bindings.create_pos_model().then(
-      this.assertCode,
-    );
+    const rid = await this.bindings.create_pos_model().then(this.assertCode);
     const model = new POSModel(this, rid);
     this.#models.push(model);
     return model;
@@ -225,9 +222,9 @@ export class ModelManager {
   async createZeroShotClassificationModel(): Promise<
     ZeroShotClassificationModel
   > {
-    const rid = await this.bindings.create_zero_shot_model().then(
-      this.assertCode,
-    );
+    const rid = await this.bindings
+      .create_zero_shot_model()
+      .then(this.assertCode);
     const model = new ZeroShotClassificationModel(this, rid);
     this.#models.push(model);
     return model;
