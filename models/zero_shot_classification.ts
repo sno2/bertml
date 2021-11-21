@@ -3,7 +3,7 @@ import { Model } from "../model.ts";
 import { encode } from "../utils/encode.ts";
 import type { Label } from "./sequence_classification.ts";
 
-interface ZeroShotPredictInit {
+export interface ZeroShotPredictInit {
   inputs: string[];
   labels: string[];
   /** defaults to '128' */

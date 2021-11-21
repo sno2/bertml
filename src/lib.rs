@@ -4,10 +4,10 @@ mod ner;
 mod pos_tagging;
 mod qa;
 mod sentiment;
+mod text_generation;
 mod translation;
 mod zero_shot_classification;
 
-pub use zero_shot_classification::*;
 pub use allocators::*;
 pub use conversation::*;
 pub use ner::*;
@@ -16,7 +16,9 @@ pub use pos_tagging::*;
 pub use qa::*;
 pub use sentiment::*;
 use std::sync::Mutex;
+pub use text_generation::*;
 pub use translation::*;
+pub use zero_shot_classification::*;
 
 pub static LAST_ERROR: Lazy<Mutex<Vec<u8>>> = Lazy::new(|| Mutex::new(Vec::new()));
 pub static LAST_RESULT: Lazy<Mutex<Vec<u8>>> = Lazy::new(|| Mutex::new(Vec::new()));
@@ -31,7 +33,7 @@ pub fn set_result(v: Vec<u8>) -> usize {
 /// Inspired by deno_sqlite3's `exec` helper by @littledivvy
 pub fn exec<F>(f: F) -> isize
 where
-   F: FnOnce() -> Result<isize, anyhow::Error>,
+    F: FnOnce() -> Result<isize, anyhow::Error>,
 {
     match f() {
         Ok(a) => a,

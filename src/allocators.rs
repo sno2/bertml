@@ -1,6 +1,6 @@
 use crate::create_allocator;
 use rust_bert::pipelines::{
-    conversation, ner, pos_tagging, question_answering, sentiment, translation,
+    conversation, ner, pos_tagging, question_answering, sentiment, text_generation, translation,
     zero_shot_classification,
 };
 
@@ -12,6 +12,7 @@ pub enum Model {
     ConversationModel(conversation::ConversationModel),
     POSModel(pos_tagging::POSModel),
     ZeroShotClassificationModel(zero_shot_classification::ZeroShotClassificationModel),
+    TextGenerationModel(text_generation::TextGenerationModel),
 }
 
 pub enum ModelResource {

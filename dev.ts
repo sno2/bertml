@@ -4,6 +4,16 @@ const SECTION = (name: string) => console.log(`\n${name}\n`);
 
 const manager = new ModelManager();
 
+SECTION("TEXT GENERATION MODEL");
+
+const textGenerationModel = await manager.createTextGenerationModel();
+
+console.log(
+  await textGenerationModel.generate({
+    inputs: ["The black hole is a wonder of space."],
+  })
+);
+
 SECTION("ZERO SHOT CLASSIFICATION MODEL");
 
 const zeroShotModel = await manager.createZeroShotClassificationModel();

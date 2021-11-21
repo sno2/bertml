@@ -8,6 +8,7 @@ import { ConversationModel } from "./models/conversation.ts";
 import { ZeroShotClassificationModel } from "./models/zero_shot_classification.ts";
 import type { TranslationModelInit } from "./models/translation/mod.ts";
 import { POSModel } from "./models/pos.ts";
+import { TextGenerationModel } from "./models/text_generation.ts";
 import { encode } from "./utils/encode.ts";
 import { decode } from "./utils/decode.ts";
 import { BertMLError } from "./error.ts";
@@ -86,6 +87,16 @@ const symbolDefinitions = {
     nonblocking: true,
   },
   zero_shot_predict_multilabel: {
+    parameters: ["usize", "buffer", "usize"],
+    result: "isize",
+    nonblocking: true,
+  },
+  create_text_generation_model: {
+    parameters: [],
+    result: "isize",
+    nonblocking: true,
+  },
+  text_generation_generate: {
     parameters: ["usize", "buffer", "usize"],
     result: "isize",
     nonblocking: true,
@@ -192,7 +203,7 @@ export class ModelManager {
   }
 
   async createTranslationModel<T extends TranslationModelInit>(
-    init: T,
+    init: T
   ): Promise<TranslationModel<T>> {
     const bytes = encode(JSON.stringify(init));
     const rid = await this.bindings
@@ -219,13 +230,20 @@ export class ModelManager {
     return model;
   }
 
-  async createZeroShotClassificationModel(): Promise<
-    ZeroShotClassificationModel
-  > {
+  async createZeroShotClassificationModel(): Promise<ZeroShotClassificationModel> {
     const rid = await this.bindings
       .create_zero_shot_model()
       .then(this.assertCode);
     const model = new ZeroShotClassificationModel(this, rid);
+    this.#models.push(model);
+    return model;
+  }
+
+  async createTextGenerationModel(): Promise<TextGenerationModel> {
+    const rid = await this.bindings
+      .create_text_generation_model()
+      .then(this.assertCode);
+    const model = new TextGenerationModel(this, rid);
     this.#models.push(model);
     return model;
   }
