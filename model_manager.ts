@@ -131,8 +131,8 @@ const BINARY_LOCATION = (() => {
     linux: ["lib", "so"],
   }[Deno.build.os];
 
-  const name = "libffi";
-  const path = "./target/release/";
+  const name = "bertml";
+  const path = "https://github.com/sno2/bertml/releases/download/v0.1.0-alpha/";
 
   return `${path}${prefix}${name}.${ext}`;
 })();
@@ -214,7 +214,7 @@ export class ModelManager {
   }
 
   async createTranslationModel<T extends TranslationModelInit>(
-    init: T,
+    init: T
   ): Promise<TranslationModel<T>> {
     const bytes = encode(JSON.stringify(init));
     const rid = await this.bindings
@@ -241,9 +241,7 @@ export class ModelManager {
     return model;
   }
 
-  async createZeroShotClassificationModel(): Promise<
-    ZeroShotClassificationModel
-  > {
+  async createZeroShotClassificationModel(): Promise<ZeroShotClassificationModel> {
     const rid = await this.bindings
       .create_zero_shot_model()
       .then(this.assertCode);
