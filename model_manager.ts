@@ -13,6 +13,7 @@ import { SummarizationModel } from "./models/summarization.ts";
 import { encode } from "./utils/encode.ts";
 import { decode } from "./utils/decode.ts";
 import { BertMLError } from "./error.ts";
+import { Plug } from "https://deno.land/x/plug@0.4.1/mod.ts";
 
 const symbolDefinitions = {
   create_qa_model: { parameters: [], result: "isize", nonblocking: true },
@@ -124,19 +125,6 @@ const symbolDefinitions = {
 
 type FFISymbols = TypedDLOpenDynamicLib<typeof symbolDefinitions>["symbols"];
 
-const BINARY_LOCATION = (() => {
-  const [prefix, ext] = {
-    windows: ["", "dll"],
-    darwin: ["lib", "dylib"],
-    linux: ["lib", "so"],
-  }[Deno.build.os];
-
-  const name = "bertml";
-  const path = "https://github.com/sno2/bertml/releases/download/v0.1.0-alpha/";
-
-  return `${path}${prefix}${name}.${ext}`;
-})();
-
 /** Provides an abstraction for creating models that run on the same native thread (but don't block the JS thread). */
 export class ModelManager {
   #symbols: FFISymbols;
@@ -184,10 +172,20 @@ export class ModelManager {
     return this.#helpers;
   }
 
-  constructor() {
-    const lib = Deno.dlopen(BINARY_LOCATION, symbolDefinitions as any);
+  constructor(lib: Deno.DynamicLibrary<any>) {
     this.#symbols = lib.symbols as any;
     this.#close = lib.close.bind(lib);
+  }
+
+  static async create(): Promise<ModelManager> {
+    const lib = await Plug.prepare(
+      {
+        name: "bertml",
+        url: "https://github.com/sno2/bertml/releases/download/v0.1.0-alpha2/",
+      },
+      symbolDefinitions as any
+    );
+    return new ModelManager(lib);
   }
 
   async createQAModel(): Promise<QAModel> {
