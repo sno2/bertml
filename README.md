@@ -9,7 +9,46 @@ High-level non-blocking Deno bindings to the
 
 The `ModelManager` class manages the FFI bindings and all of your models that
 connect to the bindings. You create models from the manager and then use the
-methods on those classes.
+methods on those classes. The creation of a `ModelManager` is synchronous as the
+loading of binaries with the Deno FFI API is synchronous. Therefore, make sure
+you create your `ModelManager` before asynchronous logic begins to not cause any
+unexpected behavior.
+
+```ts
+const manager = new ModelManager();
+```
+
+## Creating Models
+
+To create models, simply call the corresponding `create*Model` method on the
+`ModelManager` class and store the model as a variable. For this example, we'll
+be creating a question answering model:
+
+```ts
+const manager = new ModelManager();
+
+const qaModel = await manager.createQAModel();
+
+const answers = await qaModel.query({
+  questionGroups: [
+    {
+      context: "Amy lives in Canada.",
+      question: "Where does Amy live?",
+    },
+  ],
+});
+
+console.log(answers);
+```
+
+Output:
+
+```
+[ [ { score: 0.985611081123352, start: 13, end: 19, answer: "Canada" } ] ]
+```
+
+If you need to learn more about creating instances of models, then simply check
+out the docs.
 
 ### Supported Pipelines
 
