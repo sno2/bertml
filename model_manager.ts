@@ -214,7 +214,7 @@ export class ModelManager {
   }
 
   async createTranslationModel<T extends TranslationModelInit>(
-    init: T
+    init: T,
   ): Promise<TranslationModel<T>> {
     const bytes = encode(JSON.stringify(init));
     const rid = await this.bindings
@@ -241,7 +241,9 @@ export class ModelManager {
     return model;
   }
 
-  async createZeroShotClassificationModel(): Promise<ZeroShotClassificationModel> {
+  async createZeroShotClassificationModel(): Promise<
+    ZeroShotClassificationModel
+  > {
     const rid = await this.bindings
       .create_zero_shot_model()
       .then(this.assertCode);

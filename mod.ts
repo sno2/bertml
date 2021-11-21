@@ -22,9 +22,9 @@ export { POSModel } from "./models/pos.ts";
 export type { POSEntity } from "./models/pos.ts";
 
 export {
-  ConversationModel,
-  ConversationManager,
   Conversation,
+  ConversationManager,
+  ConversationModel,
 } from "./models/conversation.ts";
 export type { ConversationInit } from "./models/conversation.ts";
 

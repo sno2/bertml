@@ -10,11 +10,19 @@ export interface ZeroShotPredictInit {
   maxLength?: number;
 }
 
+/**
+ * A model for creating custom labels and checking to see if these labels can
+ * be matched on certain inputs.
+ */
 export class ZeroShotClassificationModel extends Model {
   constructor(manager: ModelManager, rid: number) {
     super(manager, rid);
   }
 
+  /**
+   * Predicts the label that has the highest confidence score for each of the
+   * inputs.
+   */
   async predict(init: ZeroShotPredictInit): Promise<Label[]> {
     init.maxLength ??= 128;
     const { bindings, helpers, assertCode } = this.manager;
@@ -26,6 +34,7 @@ export class ZeroShotClassificationModel extends Model {
     return JSON.parse(labels);
   }
 
+  /** Predicts the score of each label for each of the inputs. */
   async predictMultilabel(init: ZeroShotPredictInit): Promise<Label[][]> {
     init.maxLength ??= 128;
     const { bindings, helpers, assertCode } = this.manager;

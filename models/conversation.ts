@@ -7,6 +7,7 @@ export interface ConversationInit {
   includeHistory?: boolean;
 }
 
+/** A structure for holding a conversation and its history. */
 export class Conversation {
   #conversationManager: ConversationManager;
   #rid: number;
@@ -92,6 +93,7 @@ export class ConversationManager {
   }
 }
 
+/** A class for interacting with the conversation model. */
 export class ConversationModel extends Model {
   constructor(manager: ModelManager, rid: number) {
     super(manager, rid);

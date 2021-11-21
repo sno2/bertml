@@ -19,6 +19,10 @@ export interface TranslateInit<
   targetLanguage: ModelInit["targetLanguages"][number];
 }
 
+/**
+ * A model for translating text from any of the given source languages to any
+ * of the given target languages.
+ */
 export class TranslationModel<T extends TranslationModelInit> extends Model {
   #init: T;
 
@@ -27,6 +31,9 @@ export class TranslationModel<T extends TranslationModelInit> extends Model {
     this.#init = init;
   }
 
+  /**
+   * Translates the given text in the source language into the target language.
+   */
   async translate(init: TranslateInit<T>): Promise<string[]> {
     const { bindings, assertCode, helpers } = this.manager;
     const bytes = encode(JSON.stringify(init));

@@ -1,23 +1,28 @@
 import type { ModelManager } from "../model_manager.ts";
 import { Model } from "../model.ts";
 import { encode } from "../utils/encode.ts";
-import { decode } from "../utils/decode.ts";
 
+/** Describes the spectrum that the sentiment points towards. */
 export enum Polarity {
   Negative,
   Positive,
 }
 
+/** Describes the sentiment of a given input. */
 export interface Sentiment {
+  /** The polarity of the statement. */
   polarity: Polarity;
+  /** The confidence score of the polarity. */
   score: number;
 }
 
+/** A model used to calculate the given sentiment of inputs. */
 export class SentimentModel extends Model {
   constructor(manager: ModelManager, rid: number) {
     super(manager, rid);
   }
 
+  /** Predicts the sentiments of the given inputs. */
   async predict(input: string[]): Promise<Sentiment[]> {
     const { bindings, assertCode, helpers } = this.manager;
     const bytes = encode(JSON.stringify(input));
