@@ -9,6 +9,7 @@ import { ZeroShotClassificationModel } from "./models/zero_shot_classification.t
 import type { TranslationModelInit } from "./models/translation/mod.ts";
 import { POSModel } from "./models/pos.ts";
 import { TextGenerationModel } from "./models/text_generation.ts";
+import { SummarizationModel } from "./models/summarization.ts";
 import { encode } from "./utils/encode.ts";
 import { decode } from "./utils/decode.ts";
 import { BertMLError } from "./error.ts";
@@ -97,6 +98,16 @@ const symbolDefinitions = {
     nonblocking: true,
   },
   text_generation_generate: {
+    parameters: ["usize", "buffer", "usize"],
+    result: "isize",
+    nonblocking: true,
+  },
+  create_summarization_model: {
+    parameters: [],
+    result: "isize",
+    nonblocking: true,
+  },
+  summarization_summarize: {
     parameters: ["usize", "buffer", "usize"],
     result: "isize",
     nonblocking: true,
@@ -244,6 +255,15 @@ export class ModelManager {
       .create_text_generation_model()
       .then(this.assertCode);
     const model = new TextGenerationModel(this, rid);
+    this.#models.push(model);
+    return model;
+  }
+
+  async createSummarizationModel(): Promise<SummarizationModel> {
+    const rid = await this.bindings
+      .create_summarization_model()
+      .then(this.assertCode);
+    const model = new SummarizationModel(this, rid);
     this.#models.push(model);
     return model;
   }

@@ -16,6 +16,7 @@ methods on those classes.
 > Note: we do not currently support any model-level configuration except for the
 > different languages for the `TranslationModel`.
 
+- `SummarizationModel`
 - `ConversationModel`
 - `TranslationModel`
 - `NERModel`
