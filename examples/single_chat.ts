@@ -3,7 +3,7 @@ import { ModelManager } from "../mod.ts";
 const sleep = (t: number): Promise<void> =>
   new Promise((resolve) => setTimeout(() => resolve(), t));
 
-const manager = new ModelManager();
+const manager = await ModelManager.create();
 
 console.log("Loading conversation model...");
 

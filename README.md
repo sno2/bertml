@@ -15,7 +15,7 @@ you create your `ModelManager` before asynchronous logic begins to not cause any
 unexpected behavior.
 
 ```ts
-const manager = new ModelManager();
+const manager = await ModelManager.create();
 ```
 
 ## Creating Models
@@ -25,7 +25,7 @@ To create models, simply call the corresponding `create*Model` method on the
 be creating a question answering model:
 
 ```ts
-const manager = new ModelManager();
+const manager = await ModelManager.create();
 
 const qaModel = await manager.createQAModel();
 

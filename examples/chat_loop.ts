@@ -1,6 +1,6 @@
 import { ModelManager } from "../mod.ts";
 
-const manager = new ModelManager();
+const manager = await ModelManager.create();
 
 const convoModel = await manager.createConversationModel();
 const convoManager = await convoModel.createConversationManager();
